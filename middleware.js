@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
-import { getAuth } from "firebase/auth";
-import app from "@/firebase/firebaseConfig";
 
-export async function middleware(req) {
-  const auth = getAuth(app);
-  const user = auth.currentUser;
+export function middleware(request) {
+  const isAuthenticated = false; // Tutaj dodamy prawdziwą weryfikację użytkownika później
 
   const protectedRoutes = ["/dashboard"];
 
-  if (protectedRoutes.includes(req.nextUrl.pathname) && !user) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  if (protectedRoutes.includes(request.nextUrl.pathname) && !isAuthenticated) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"], // Ścieżki, które chcemy chronić
+  matcher: ["/dashboard/:path*"], // Middleware dla `/dashboard` i podstron
 };
